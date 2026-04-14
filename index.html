@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Python-разработчик | Визитка</title>
-    <!-- Google Fonts & Simple Icons (Font Awesome) -->
+    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -29,10 +29,8 @@
             border-radius: 2rem;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(66, 153, 225, 0.1);
             overflow: hidden;
-            backdrop-filter: blur(0px);
         }
 
-        /* минималистичная тех-полоска */
         .tech-strip {
             height: 6px;
             background: linear-gradient(90deg, #3069fe, #6c5ce7, #00b4d8, #3069fe);
@@ -49,7 +47,7 @@
             padding: 2rem 2rem 2.5rem 2rem;
         }
 
-        /* header + аватар */
+        /* profile section */
         .profile-section {
             display: flex;
             flex-wrap: wrap;
@@ -88,10 +86,6 @@
             border-color: #3b82f6;
         }
 
-        .job-title {
-            flex: 1;
-        }
-
         .job-title h1 {
             font-size: 2.2rem;
             font-weight: 700;
@@ -113,7 +107,7 @@
             border-left: 3px solid #3b82f6;
         }
 
-        /* карточки-гриды */
+        /* cards grid */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -185,15 +179,7 @@
             margin-bottom: 0.3rem;
         }
 
-        .employment-badge {
-            background: #0f212e;
-            color: #7dd3fc;
-            border-radius: 20px;
-            padding: 0.2rem 0.9rem;
-            font-size: 0.8rem;
-        }
-
-        .job-entry, .education-entry, .course-entry, .recommend-entry {
+        .job-entry {
             margin-bottom: 1.3rem;
             border-left: 2px solid #2d3a5e;
             padding-left: 1rem;
@@ -234,12 +220,7 @@
             font-weight: 500;
             border: 0.5px solid #2c3e66;
             transition: 0.1s;
-        }
-
-        .skill-pill.highlight {
-            background: #1e2a47;
-            border-color: #3b82f6;
-            color: #bbd7fb;
+            color: #cbd5e1;
         }
 
         .contact-info a {
@@ -258,32 +239,8 @@
             margin: 1rem 0;
         }
 
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .edit-note {
-            text-align: right;
-            font-size: 0.7rem;
-            color: #4b5563;
-            margin-top: 0.5rem;
-        }
-
-        button.edit-placeholder {
-            background: transparent;
-            border: 1px solid #2d3748;
-            border-radius: 20px;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.7rem;
-            color: #9ca3af;
-            cursor: default;
-            transition: 0.1s;
-        }
-
-        button.edit-placeholder:hover {
-            background: #1e293b;
+        .education-entry {
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 720px) {
@@ -297,9 +254,6 @@
             .detail-label {
                 min-width: 100px;
             }
-        }
-        .badge-icon {
-            margin-right: 4px;
         }
     </style>
 </head>
@@ -318,9 +272,6 @@
                 <h1>Python-разработчик</h1>
                 <div class="job-badge">
                     <i class="fas fa-code"></i> 1 год 10 месяцев опыта
-                </div>
-                <div class="edit-note" style="margin-top: 8px;">
-                    <button class="edit-placeholder" disabled><i class="fas fa-pen"></i> Редактировать профиль</button>
                 </div>
             </div>
         </div>
@@ -373,13 +324,10 @@
                     <span class="detail-label"><i class="fas fa-envelope"></i> Электронная почта:</span>
                     <span class="detail-value"><a href="mailto:89851602283v@gmail.com">89851602283v@gmail.com</a></span>
                 </div>
-                <div class="edit-note" style="margin-top: 10px;">
-                    <button class="edit-placeholder" disabled><i class="fas fa-user-edit"></i> Редактировать контакты</button>
-                </div>
             </div>
         </div>
 
-        <!-- ОПЫТ РАБОТЫ + О себе в одном ряду -->
+        <!-- ОПЫТ РАБОТЫ + О себе и навыки/образование -->
         <div class="info-grid">
             <!-- Опыт работы -->
             <div class="card">
@@ -430,24 +378,22 @@
                         <li>Работа с Atlassian Jira, Active Directory, Confluence.</li>
                     </ul>
                 </div>
-                <div class="edit-note">
-                    <button class="edit-placeholder" disabled><i class="fas fa-plus-circle"></i> Добавить опыт</button>
-                </div>
             </div>
 
-            <!-- О себе + Навыки + рекомендация -->
+            <!-- Правая колонка: О себе, Навыки, Образование -->
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-user-astronaut"></i>
                     <h3>О себе</h3>
                 </div>
-                <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.5;">Начинающий разработчик, знаю разное и готов применить это на практике. Постоянно развиваюсь в Python, бэкенд-разработке и автоматизации.</p>
+                <p style="margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.5;">Начинающий разработчик, знаю разное и готов применить это на практике. Постоянно развиваюсь в Python, бэкенд-разработке и автоматизации.</p>
+                
                 <div class="card-header" style="margin-top: 0.5rem;">
                     <i class="fas fa-code-branch"></i>
                     <h3>Навыки</h3>
                 </div>
                 <div class="skill-list">
-                    <span class="skill-pill highlight">Python</span>
+                    <span class="skill-pill">Python</span>
                     <span class="skill-pill">SQL</span>
                     <span class="skill-pill">Linux</span>
                     <span class="skill-pill">Atlassian Jira</span>
@@ -456,13 +402,13 @@
                     <span class="skill-pill">Swagger</span>
                     <span class="skill-pill">Postman</span>
                     <span class="skill-pill">JSON</span>
-                    <span class="skill-pill highlight">Английский язык</span>
-                    <span class="skill-pill highlight">Docker</span>
+                    <span class="skill-pill">Английский язык</span>
+                    <span class="skill-pill">Docker</span>
                     <span class="skill-pill">GitHub</span>
                     <span class="skill-pill">FastAPI</span>
                 </div>
 
-                <div class="card-header" style="margin-top: 1rem;">
+                <div class="card-header" style="margin-top: 1.2rem;">
                     <i class="fas fa-graduation-cap"></i>
                     <h3>Образование</h3>
                 </div>
@@ -470,50 +416,21 @@
                     <div><strong>Московский финансово-промышленный университет "Синергия", Москва</strong></div>
                     <div>Разработка программного обеспечения (Full-stack разработка) · 2027 · Высшее</div>
                 </div>
-
-                <div class="card-header" style="margin-top: 0.5rem;">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Подтверждение навыков</h3>
-                </div>
-                <div class="skill-list" style="margin-bottom: 0.8rem;">
-                    <span class="skill-pill" style="background:#132235;">🐍 Python</span>
-                    <span class="skill-pill" style="background:#132235;">🗄️ SQL</span>
-                    <span class="skill-pill" style="background:#132235;">🐳 Docker</span>
-                    <span class="skill-pill" style="background:#132235;">🐧 Linux</span>
-                </div>
-                <div style="font-size: 0.85rem; background:#0d1117; padding: 0.6rem; border-radius: 1rem; margin: 0.5rem 0;">
-                    <i class="fas fa-link"></i> Курсы по профессии «Python-разработчик» — посмотрите на карьерной платформе от hh.ru
-                </div>
-
-                <div class="card-header" style="margin-top: 0.8rem;">
-                    <i class="fas fa-thumbs-up"></i>
-                    <h3>Рекомендации</h3>
-                </div>
-                <div class="recommend-entry">
-                    <div><strong>Денис</strong> · Генеральный директор, BOOCO</div>
-                    <div style="font-size: 0.85rem; color: #b9c7dd;">«Ценный сотрудник, проявил себя в тестировании и техподдержке»</div>
-                </div>
-                <div class="edit-note">
-                    <button class="edit-placeholder" disabled><i class="fas fa-plus"></i> Добавить рекомендацию</button>
-                </div>
             </div>
         </div>
 
-        <!-- Повышение квалификации + Курсы -->
+        <!-- Повышение квалификации и дополнительные сведения (без лишних кнопок) -->
         <div class="info-grid">
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-chalkboard-user"></i>
                     <h3>Повышение квалификации, курсы</h3>
                 </div>
-                <div class="course-entry">
+                <div class="job-entry" style="border-left-color: #3b5c8a;">
                     <div><strong>Python Developer. Basic</strong> — Otus, 2026</div>
                 </div>
-                <div class="course-entry">
+                <div class="job-entry" style="border-left-color: #3b5c8a;">
                     <div><strong>Тестирование ПО с нуля. Теория + Практика</strong> — Stepik, 2024</div>
-                </div>
-                <div class="edit-note">
-                    <button class="edit-placeholder" disabled><i class="fas fa-plus-circle"></i> Добавить курс</button>
                 </div>
             </div>
             <div class="card">
@@ -538,11 +455,6 @@
                     <i class="fas fa-code"></i> Открыт для предложений · Python-разработчик
                 </div>
             </div>
-        </div>
-
-        <!-- Подпись / имитация редактора -->
-        <div class="edit-note" style="text-align: center; margin-top: 1rem; border-top: 1px solid #1f2937; padding-top: 1rem;">
-            <i class="fas fa-sync-alt"></i> Данные актуальны · Все поля редактируемы (интерактивная заглушка) <i class="fas fa-pen-fancy"></i>
         </div>
     </div>
 </div>
