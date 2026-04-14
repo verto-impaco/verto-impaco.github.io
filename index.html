@@ -1,629 +1,553 @@
+Вот готовый одностраничный сайт-визитка для Python-разработчика с минималистичным «технарским» дизайном. Вся информация собрана на одной странице, без вкладок и лишних переходов.
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Vasiliy Streleckiy · Python Backend Developer · Retro-Futuristic Terminal Portfolio</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      user-select: none; /* усиливает ощущение терминала, но текст можно выделять */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python-разработчик | Визитка</title>
+    <!-- Google Fonts & Simple Icons (Font Awesome) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background-color: #010a0f;
-      min-height: 100vh;
-      font-family: 'Fira Code', 'Courier New', 'JetBrains Mono', monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      position: relative;
-      overflow-x: hidden;
-    }
+        body {
+            background: #0a0c10;
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
 
-    /* matrix rain background — very subtle, cyberpunk */
-    #matrix-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.2;
-    }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #0f1117;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(66, 153, 225, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+        }
 
-    /* main container — looks like CRT monitor */
-    .portfolio-container {
-      position: relative;
-      z-index: 2;
-      width: 1400px;
-      max-width: 98vw;
-      background: #0b1219;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 255, 65, 0.15), 0 0 0 2px #1e3a2f, 0 0 0 6px #03100c;
-      overflow: hidden;
-      backdrop-filter: blur(0.2px);
-      transition: all 0.2s;
-    }
+        /* минималистичная тех-полоска */
+        .tech-strip {
+            height: 6px;
+            background: linear-gradient(90deg, #3069fe, #6c5ce7, #00b4d8, #3069fe);
+            background-size: 200% 100%;
+            animation: subtleShift 8s ease infinite;
+        }
 
-    /* vs code style title bar */
-    .vscode-titlebar {
-      background: #1a232c;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid #2caf6e40;
-      flex-wrap: wrap;
-    }
-    .window-controls {
-      display: flex;
-      gap: 10px;
-    }
-    .win-btn {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #ff5f56;
-    }
-    .win-btn:nth-child(2) { background: #ffbd2e; }
-    .win-btn:nth-child(3) { background: #27c93f; }
-    .file-path {
-      font-size: 13px;
-      color: #9cdc9e;
-      background: #0f1a1f;
-      padding: 4px 12px;
-      border-radius: 18px;
-      font-family: monospace;
-      letter-spacing: 0.5px;
-      border: 0.5px solid #2b5e3b;
-    }
-    .ide-header-right {
-      margin-left: auto;
-      display: flex;
-      gap: 16px;
-      font-size: 12px;
-      color: #45e48b;
-    }
+        @keyframes subtleShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
 
-    /* main IDE layout: sidebar + main */
-    .ide-layout {
-      display: flex;
-      flex-wrap: wrap;
-      min-height: 600px;
-    }
+        .content {
+            padding: 2rem 2rem 2.5rem 2rem;
+        }
 
-    /* file explorer sidebar */
-    .explorer {
-      width: 260px;
-      background: #071217e6;
-      border-right: 1px solid #2e6b49;
-      padding: 20px 0 20px 16px;
-      font-size: 14px;
-    }
-    .explorer-title {
-      color: #bbb;
-      text-transform: uppercase;
-      font-weight: 500;
-      letter-spacing: 1px;
-      font-size: 12px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .folder-structure {
-      list-style: none;
-    }
-    .folder-structure li {
-      margin: 12px 0;
-      color: #8bc98a;
-      cursor: default;
-      transition: 0.1s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: monospace;
-    }
-    .folder-structure li .icon {
-      font-size: 16px;
-    }
-    .folder-structure li.active {
-      color: #f5f9ff;
-      text-shadow: 0 0 3px #5effa3;
-      background: #1e3a2f40;
-      border-left: 2px solid #9effb0;
-      padding-left: 8px;
-      margin-left: -10px;
-    }
-    .folder-structure li span:last-child {
-      font-size: 13px;
-    }
+        /* header + аватар */
+        .profile-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #252a34;
+            padding-bottom: 2rem;
+        }
 
-    /* main content area — terminal / code viewer */
-    .main-area {
-      flex: 1;
-      background: #030c0f;
-      padding: 18px 24px;
-      overflow-y: auto;
-      max-height: 70vh;
-    }
+        .avatar-wrapper {
+            flex-shrink: 0;
+        }
 
-    /* terminal block */
-    .terminal-window {
-      background: #03100c;
-      border-radius: 16px;
-      border: 1px solid #2faa6e;
-      box-shadow: 0 0 12px rgba(0, 255, 128, 0.2);
-      padding: 20px;
-      margin-bottom: 28px;
-    }
-    .terminal-header {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid #2b7a4b;
-      padding-bottom: 8px;
-    }
-    .term-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #3cff8f;
-    }
-    .term-dot:nth-child(2) { background: #ffd966; }
-    .term-dot:nth-child(3) { background: #ff7b6e; }
-    .command-line {
-      font-family: monospace;
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: #c5ffb0;
-    }
-    .cursor-blink {
-      background-color: #b3ffcf;
-      width: 12px;
-      height: 1.5rem;
-      display: inline-block;
-      animation: blink 1.2s step-end infinite;
-      margin-left: 4px;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; background-color: #e0ffb0; }
-      50% { opacity: 0; }
-    }
-    .ascii-art {
-      color: #68e48c;
-      font-size: 12px;
-      white-space: pre;
-      font-family: monospace;
-      margin: 14px 0;
-    }
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #2d3a5e;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
+        }
 
-    /* code snippets glow */
-    .code-snippet {
-      background: #04160f;
-      padding: 16px;
-      border-radius: 12px;
-      border-left: 4px solid #b3ffb0;
-      margin: 20px 0;
-      font-family: 'Fira Code', monospace;
-      font-size: 14px;
-      color: #c2f0c2;
-      overflow-x: auto;
-      box-shadow: 0 0 8px #1f6e4322;
-    }
-    .keyword { color: #ffbd7f; }
-    .string { color: #b5ff9b; }
-    .function { color: #e3ff6e; }
-    .comment { color: #5f9b7a; font-style: italic; }
+        .profile-avatar i {
+            font-size: 3.8rem;
+            color: #60a5fa;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
 
-    .glow-text {
-      text-shadow: 0 0 2px #70ffa0;
-    }
+        .profile-avatar:hover {
+            transform: scale(1.02);
+            border-color: #3b82f6;
+        }
 
-    /* graphs / data flow mock */
-    .data-flow {
-      background: #03100c;
-      border: 1px solid #397e55;
-      border-radius: 20px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-    .flow-title {
-      color: #cdffb0;
-      font-size: 14px;
-      margin-bottom: 16px;
-      letter-spacing: 1px;
-    }
-    .flow-grid {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .node {
-      background: #071e16;
-      border-radius: 12px;
-      padding: 8px 12px;
-      color: #95ffb4;
-      border: 1px solid #3dd68c;
-      font-size: 12px;
-    }
-    .arrow {
-      font-size: 24px;
-      color: #55ff99;
-      animation: pulseGlow 1.8s infinite;
-    }
-    @keyframes pulseGlow {
-      0% { opacity: 0.5; text-shadow: 0 0 0px; }
-      100% { opacity: 1; text-shadow: 0 0 4px #b3ffbc; }
-    }
+        .job-title {
+            flex: 1;
+        }
 
-    /* glitch edge effect */
-    .glitch-edge::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(0deg, rgba(0,255,0,0.02) 0px, rgba(0,255,0,0.02) 2px, transparent 2px, transparent 6px);
-      pointer-events: none;
-      z-index: 3;
-    }
+        .job-title h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #a0c4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
 
-    button.resume-link {
-      background: none;
-      border: 1px solid #45e48b;
-      color: #c4ffcf;
-      padding: 8px 20px;
-      font-family: monospace;
-      font-size: 14px;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: 0.2s;
-      margin-top: 20px;
-    }
-    button.resume-link:hover {
-      background: #1b6b42;
-      box-shadow: 0 0 10px #2eff8e;
-    }
+        .job-badge {
+            background: #1a202c;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            border-left: 3px solid #3b82f6;
+        }
 
-    hr {
-      border-color: #297a4b;
-    }
-    a {
-      color: #b1ffba;
-      text-decoration: none;
-    }
+        /* карточки-гриды */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
 
-    @media (max-width: 780px) {
-      .explorer { width: 200px; }
-      .command-line { font-size: 1rem; }
-    }
-  </style>
+        .card {
+            background: #12161f;
+            border-radius: 1.5rem;
+            padding: 1.3rem 1.6rem;
+            border: 1px solid #212734;
+            transition: all 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            border-color: #334155;
+            background: #131822;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px dashed #2a2f3c;
+            padding-bottom: 0.7rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-header i {
+            font-size: 1.3rem;
+            color: #60a5fa;
+        }
+
+        .card-header h3 {
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: -0.2px;
+        }
+
+        .detail-item {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #9ca3af;
+            min-width: 120px;
+        }
+
+        .detail-value {
+            color: #f0f3fa;
+            font-weight: 450;
+        }
+
+        .work-tag {
+            background: #1e293b;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .employment-badge {
+            background: #0f212e;
+            color: #7dd3fc;
+            border-radius: 20px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.8rem;
+        }
+
+        .job-entry, .education-entry, .course-entry, .recommend-entry {
+            margin-bottom: 1.3rem;
+            border-left: 2px solid #2d3a5e;
+            padding-left: 1rem;
+        }
+
+        .job-title-sm {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .company {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin: 0.2rem 0 0.3rem 0;
+        }
+
+        .date {
+            font-size: 0.75rem;
+            color: #6c7a91;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-pill {
+            background: #0f172f;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 0.5px solid #2c3e66;
+            transition: 0.1s;
+        }
+
+        .skill-pill.highlight {
+            background: #1e2a47;
+            border-color: #3b82f6;
+            color: #bbd7fb;
+        }
+
+        .contact-info a {
+            color: #bbd7fb;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        hr {
+            border-color: #1f2937;
+            margin: 1rem 0;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .edit-note {
+            text-align: right;
+            font-size: 0.7rem;
+            color: #4b5563;
+            margin-top: 0.5rem;
+        }
+
+        button.edit-placeholder {
+            background: transparent;
+            border: 1px solid #2d3748;
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            color: #9ca3af;
+            cursor: default;
+            transition: 0.1s;
+        }
+
+        button.edit-placeholder:hover {
+            background: #1e293b;
+        }
+
+        @media (max-width: 720px) {
+            .content {
+                padding: 1.2rem;
+            }
+            .profile-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .detail-label {
+                min-width: 100px;
+            }
+        }
+        .badge-icon {
+            margin-right: 4px;
+        }
+    </style>
 </head>
 <body>
-<canvas id="matrix-canvas"></canvas>
-<div class="portfolio-container glitch-edge">
-  <!-- VS Code style header -->
-  <div class="vscode-titlebar">
-    <div class="window-controls">
-      <div class="win-btn"></div>
-      <div class="win-btn"></div>
-      <div class="win-btn"></div>
-    </div>
-    <div class="file-path">~/portfolio/resume_terminal.py</div>
-    <div class="ide-header-right">
-      <span>🐍 Python 3.12</span>
-      <span>⚡ BACKEND_DEV</span>
-    </div>
-  </div>
+<div class="container">
+    <div class="tech-strip"></div>
+    <div class="content">
+        <!-- Шапка с аватаром -->
+        <div class="profile-section">
+            <div class="avatar-wrapper">
+                <div class="profile-avatar">
+                    <i class="fab fa-python"></i>
+                </div>
+            </div>
+            <div class="job-title">
+                <h1>Python-разработчик</h1>
+                <div class="job-badge">
+                    <i class="fas fa-code"></i> 1 год 10 месяцев опыта
+                </div>
+                <div class="edit-note" style="margin-top: 8px;">
+                    <button class="edit-placeholder" disabled><i class="fas fa-pen"></i> Редактировать профиль</button>
+                </div>
+            </div>
+        </div>
 
-  <div class="ide-layout">
-    <!-- Sidebar explorer -->
-    <div class="explorer">
-      <div class="explorer-title">
-        📁 EXPLORER
-      </div>
-      <ul class="folder-structure">
-        <li class="active" data-section="summary">
-          <span class="icon">📄</span><span>resume.md</span>
-        </li>
-        <li data-section="skills">
-          <span class="icon">⚙️</span><span>tech_stack.py</span>
-        </li>
-        <li data-section="experience">
-          <span class="icon">💼</span><span>experience.log</span>
-        </li>
-        <li data-section="education">
-          <span class="icon">🎓</span><span>education.txt</span>
-        </li>
-        <li data-section="graphs">
-          <span class="icon">📊</span><span>data_pipeline.json</span>
-        </li>
-      </ul>
-      <div style="margin-top: 40px;">
-        <div class="explorer-title">📡 NETWORK</div>
-        <ul class="folder-structure">
-          <li><span class="icon">🌐</span><span>github.com/verto-impaco</span></li>
-          <li><span class="icon">📧</span><span>vaso.1274@mail.ru</span></li>
-        </ul>
-      </div>
-    </div>
+        <!-- Сетка: Условия работы и контакты -->
+        <div class="info-grid">
+            <!-- Рабочие параметры -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Условия работы</h3>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-chart-line"></i> Доход:</span>
+                    <span class="detail-value">Не указан</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-clock"></i> Тип занятости:</span>
+                    <span class="detail-value">Постоянная работа</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-laptop-house"></i> Формат работы:</span>
+                    <span class="detail-value">
+                        <span class="work-tag"><i class="fas fa-building"></i> На месте</span>
+                        <span class="work-tag"><i class="fas fa-wifi"></i> Удалённо</span>
+                        <span class="work-tag"><i class="fas fa-sync-alt"></i> Гибрид</span>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-hourglass-half"></i> Время в пути:</span>
+                    <span class="detail-value">Не имеет значения</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-plane"></i> Командировки:</span>
+                    <span class="detail-value">Могу</span>
+                </div>
+            </div>
 
-    <!-- Main content : dynamic terminal & code blocks -->
-    <div class="main-area" id="dynamic-content">
-      <!-- Initial content — hero terminal + resume info -->
-      <div class="terminal-window">
-        <div class="terminal-header">
-          <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
-          <span style="color:#62e68a; margin-left: 8px;">bash — zsh</span>
+            <!-- Контакты -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-address-card"></i>
+                    <h3>Контакты</h3>
+                </div>
+                <div class="detail-item contact-info">
+                    <span class="detail-label"><i class="fas fa-mobile-alt"></i> Моб. телефон (предпочтительный):</span>
+                    <span class="detail-value"><a href="tel:+79851602283">+7 985 160-22-83</a></span>
+                </div>
+                <div class="detail-item contact-info">
+                    <span class="detail-label"><i class="fas fa-envelope"></i> Электронная почта:</span>
+                    <span class="detail-value"><a href="mailto:89851602283v@gmail.com">89851602283v@gmail.com</a></span>
+                </div>
+                <div class="edit-note" style="margin-top: 10px;">
+                    <button class="edit-placeholder" disabled><i class="fas fa-user-edit"></i> Редактировать контакты</button>
+                </div>
+            </div>
         </div>
-        <div class="command-line">
-          > python developer.py --profile --verbose
-          <span class="cursor-blink"></span>
-        </div>
-        <div class="ascii-art">
-{   "status": "active",   "role": "Python Backend Engineer",   "availability": "open for contracts"   }
-        </div>
-        <div class="code-snippet">
-          <span class="keyword">class</span> <span class="function">BackendDeveloper</span>:<br>
-          &nbsp;&nbsp;&nbsp;<span class="keyword">def</span> __init__(self):<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = <span class="string">"Streleckiy Vasiliy"</span><br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.skills = [<span class="string">"FastAPI"</span>, <span class="string">"Django"</span>, <span class="string">"PostgreSQL"</span>, <span class="string">"Redis"</span>, <span class="string">"Kafka"</span>, <span class="string">"Docker"</span>, <span class="string">"K8s"</span>]<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.experience_years = 6<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.location = <span class="string">"Remote / EU"</span><br>
-          <br>
-          &nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">build_highload_systems</span>(self):<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="string">"async & distributed architecture"</span>
-        </div>
-        <button class="resume-link" id="downloadMock">📄 download_resume.txt (mock)</button>
-      </div>
 
-      <!-- resume summary block with data flow graphs -->
-      <div id="resume-summary-block">
-        <div class="code-snippet">
-          <span class="comment"># 🧬 PROFESSIONAL SUMMARY — verified track record</span><br>
-          ▸ <strong>Python backend developer</strong> with 6+ years in fintech & edtech.<br>
-          ▸ Optimized query performance <span class="string">↑47%</span> using indexing & materialized views.<br>
-          ▸ Architected event-driven microservices (Kafka, RabbitMQ) serving 50k+ RPS.<br>
-          ▸ CI/CD pipelines · GitOps · Terraform · Prometheus stack.<br>
-          ▸ Strong DSA & system design (HLD/LLD).
+        <!-- ОПЫТ РАБОТЫ + О себе в одном ряду -->
+        <div class="info-grid">
+            <!-- Опыт работы -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-history"></i>
+                    <h3>Опыт работы · 1 год 10 месяцев</h3>
+                </div>
+                <!-- Liberty -->
+                <div class="job-entry">
+                    <div class="job-title-sm">
+                        <span><i class="fas fa-bolt"></i> Liberty</span>
+                        <span class="date">Ноябрь 2025 — сейчас (6 месяцев)</span>
+                    </div>
+                    <div class="company">Инженер технической поддержки L2</div>
+                    <ul style="margin-top: 6px; margin-left: 1.2rem; color: #cbd5e6; font-size: 0.85rem;">
+                        <li>Помогал пользователям в установке и настройке VPN на различных устройствах</li>
+                        <li>Вел базу знаний компании</li>
+                    </ul>
+                </div>
+                <!-- BOOCO -->
+                <div class="job-entry">
+                    <div class="job-title-sm">
+                        <span><i class="fas fa-chalkboard"></i> BOOCO</span>
+                        <span class="date">Декабрь 2024 — Сентябрь 2025 (10 месяцев)</span>
+                    </div>
+                    <div class="company">Тестировщик</div>
+                    <ul style="margin-top: 6px; margin-left: 1.2rem; color: #cbd5e6; font-size: 0.85rem;">
+                        <li>Техническая поддержка приложения по бронированию переговорных комнат.</li>
+                        <li>Поддерживал физические панели бронирования.</li>
+                        <li>Тестировал приложение и панели (smoke и исследовательское тестирование).</li>
+                        <li>Тестировал API через Swagger и Postman.</li>
+                        <li>Обновлял приложение на базе микросервисной архитектуры с помощью Docker.</li>
+                        <li>Привлекался на проектной основе к тестированию после ухода из штата.</li>
+                    </ul>
+                </div>
+                <!-- Экспобанк -->
+                <div class="job-entry">
+                    <div class="job-title-sm">
+                        <span><i class="fas fa-university"></i> Экспобанк</span>
+                        <span class="date">Май 2025 — Август 2025 (4 месяца)</span>
+                    </div>
+                    <div class="company">Инженер по офисной поддержке</div>
+                    <ul style="margin-top: 6px; margin-left: 1.2rem; color: #cbd5e6; font-size: 0.85rem;">
+                        <li>Установка и разбор рабочих мест.</li>
+                        <li>Удаленная поддержка пользователей с использованием RDP.</li>
+                        <li>Поддержка пользователей в офисе по настройке ПК и смартфонов.</li>
+                        <li>"Заливка" ПК и ноутбуков для удаленной работы.</li>
+                        <li>Работа с Atlassian Jira, Active Directory, Confluence.</li>
+                    </ul>
+                </div>
+                <div class="edit-note">
+                    <button class="edit-placeholder" disabled><i class="fas fa-plus-circle"></i> Добавить опыт</button>
+                </div>
+            </div>
+
+            <!-- О себе + Навыки + рекомендация -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user-astronaut"></i>
+                    <h3>О себе</h3>
+                </div>
+                <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.5;">Начинающий разработчик, знаю разное и готов применить это на практике. Постоянно развиваюсь в Python, бэкенд-разработке и автоматизации.</p>
+                <div class="card-header" style="margin-top: 0.5rem;">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>Навыки</h3>
+                </div>
+                <div class="skill-list">
+                    <span class="skill-pill highlight">Python</span>
+                    <span class="skill-pill">SQL</span>
+                    <span class="skill-pill">Linux</span>
+                    <span class="skill-pill">Atlassian Jira</span>
+                    <span class="skill-pill">Atlassian Confluence</span>
+                    <span class="skill-pill">Agile</span>
+                    <span class="skill-pill">Swagger</span>
+                    <span class="skill-pill">Postman</span>
+                    <span class="skill-pill">JSON</span>
+                    <span class="skill-pill highlight">Английский язык</span>
+                    <span class="skill-pill highlight">Docker</span>
+                    <span class="skill-pill">GitHub</span>
+                    <span class="skill-pill">FastAPI</span>
+                </div>
+
+                <div class="card-header" style="margin-top: 1rem;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Образование</h3>
+                </div>
+                <div class="education-entry">
+                    <div><strong>Московский финансово-промышленный университет "Синергия", Москва</strong></div>
+                    <div>Разработка программного обеспечения (Full-stack разработка) · 2027 · Высшее</div>
+                </div>
+
+                <div class="card-header" style="margin-top: 0.5rem;">
+                    <i class="fas fa-certificate"></i>
+                    <h3>Подтверждение навыков</h3>
+                </div>
+                <div class="skill-list" style="margin-bottom: 0.8rem;">
+                    <span class="skill-pill" style="background:#132235;">🐍 Python</span>
+                    <span class="skill-pill" style="background:#132235;">🗄️ SQL</span>
+                    <span class="skill-pill" style="background:#132235;">🐳 Docker</span>
+                    <span class="skill-pill" style="background:#132235;">🐧 Linux</span>
+                </div>
+                <div style="font-size: 0.85rem; background:#0d1117; padding: 0.6rem; border-radius: 1rem; margin: 0.5rem 0;">
+                    <i class="fas fa-link"></i> Курсы по профессии «Python-разработчик» — посмотрите на карьерной платформе от hh.ru
+                </div>
+
+                <div class="card-header" style="margin-top: 0.8rem;">
+                    <i class="fas fa-thumbs-up"></i>
+                    <h3>Рекомендации</h3>
+                </div>
+                <div class="recommend-entry">
+                    <div><strong>Денис</strong> · Генеральный директор, BOOCO</div>
+                    <div style="font-size: 0.85rem; color: #b9c7dd;">«Ценный сотрудник, проявил себя в тестировании и техподдержке»</div>
+                </div>
+                <div class="edit-note">
+                    <button class="edit-placeholder" disabled><i class="fas fa-plus"></i> Добавить рекомендацию</button>
+                </div>
+            </div>
         </div>
-        <div class="data-flow">
-          <div class="flow-title">📈 DATA FLOW ARCHITECTURE (real-time ingestion)</div>
-          <div class="flow-grid">
-            <div class="node">🐍 FastAPI Gateway</div>
-            <div class="arrow">→</div>
-            <div class="node">⚡ Redis Streams</div>
-            <div class="arrow">→</div>
-            <div class="node">🔁 Kafka Cluster</div>
-            <div class="arrow">→</div>
-            <div class="node">💾 TimescaleDB</div>
-            <div class="arrow">→</div>
-            <div class="node">📡 WebSocket / Grafana</div>
-          </div>
-          <div style="margin-top: 18px; font-size: 12px; color:#95e6b0; text-align:center;">
-            [ throughput: 1.2M events/min · latency p99 < 45ms ]
-          </div>
+
+        <!-- Повышение квалификации + Курсы -->
+        <div class="info-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chalkboard-user"></i>
+                    <h3>Повышение квалификации, курсы</h3>
+                </div>
+                <div class="course-entry">
+                    <div><strong>Python Developer. Basic</strong> — Otus, 2026</div>
+                </div>
+                <div class="course-entry">
+                    <div><strong>Тестирование ПО с нуля. Теория + Практика</strong> — Stepik, 2024</div>
+                </div>
+                <div class="edit-note">
+                    <button class="edit-placeholder" disabled><i class="fas fa-plus-circle"></i> Добавить курс</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-dharmachakra"></i>
+                    <h3>Дополнительно</h3>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Языки:</span>
+                    <span class="detail-value">Английский (Intermediate+), русский</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Инструменты:</span>
+                    <span class="detail-value">Docker, Git, Postman, Swagger, FastAPI</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Готов к переезду:</span>
+                    <span class="detail-value">Рассмотрю варианты</span>
+                </div>
+                <hr>
+                <div style="font-size: 0.8rem; text-align: center; color: #6f7c91;">
+                    <i class="fas fa-code"></i> Открыт для предложений · Python-разработчик
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Подпись / имитация редактора -->
+        <div class="edit-note" style="text-align: center; margin-top: 1rem; border-top: 1px solid #1f2937; padding-top: 1rem;">
+            <i class="fas fa-sync-alt"></i> Данные актуальны · Все поля редактируемы (интерактивная заглушка) <i class="fas fa-pen-fancy"></i>
+        </div>
     </div>
-  </div>
 </div>
-
-<script>
-  // MATRIX RAIN (very subtle background)
-  const canvas = document.getElementById('matrix-canvas');
-  const ctx = canvas.getContext('2d');
-  let width, height, columns, drops, matrixChars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-  function resizeCanvas() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    columns = Math.floor(width / 20);
-    drops = Array(columns).fill(1);
-  }
-  function drawMatrix() {
-    if(!ctx) return;
-    ctx.fillStyle = "rgba(1, 10, 10, 0.045)";
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = "#0f8";
-    ctx.font = "14px monospace";
-    for(let i=0; i<drops.length; i++) {
-      let text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-      let x = i * 20;
-      let y = drops[i] * 18;
-      ctx.globalAlpha = 0.12;
-      ctx.fillText(text, x, y);
-      if(y > height && Math.random() > 0.975) drops[i] = 0;
-      drops[i]++;
-    }
-  }
-  function matrixLoop() {
-    drawMatrix();
-    requestAnimationFrame(matrixLoop);
-  }
-  window.addEventListener('resize', () => { resizeCanvas(); });
-  resizeCanvas();
-  matrixLoop();
-
-  // SIDEBAR INTERACTION: update content without losing terminal style but reflect resume details based on selected section
-  const sections = {
-    summary: `
-      <div class="terminal-window">
-        <div class="terminal-header"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div><span style="color:#62e68a;">user@portfolio:~</span></div>
-        <div class="command-line">> cat resume_summary.md<span class="cursor-blink"></span></div>
-        <div class="code-snippet">
-          <span class="comment"># 🧑‍💻 Pavel Morozov — Senior Python Backend Engineer</span><br>
-          📍 Berlin / remote · <span class="string">"available for contracts"</span><br>
-          ▸ Core stack: Python 3.11+, FastAPI, Django, SQLAlchemy, Alembic, Celery.<br>
-          ▸ Databases: PostgreSQL, MongoDB, ClickHouse, Redis.<br>
-          ▸ Cloud: AWS (ECS, RDS, Lambda) + GCP basics.<br>
-          ▸ Focus: Clean architecture, type hints, testing (pytest), high-load optimizations.
-        </div>
-        <button class="resume-link" id="downloadMock2">📄 download_full_resume.pdf (mock)</button>
-      </div>
-      <div class="data-flow">
-        <div class="flow-title">⚡ LATEST PROJECT: payment orchestrator</div>
-        <div class="flow-grid"><div class="node">💳 3DSecure</div><div class="arrow">→</div><div class="node">Anti-fraud ML</div><div class="arrow">→</div><div class="node">Ledger DB</div></div>
-        <div style="margin-top:12px;">✅ 99.99% uptime · <span class="glow-text">+32% transaction speed</span></div>
-      </div>
-    `,
-    skills: `
-      <div class="terminal-window">
-        <div class="terminal-header"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
-        <div class="command-line">> python -m tech_stack --show-all</div>
-        <div class="code-snippet">
-          <span class="keyword">skills_matrix</span> = {<br>
-          &nbsp;&nbsp;<span class="string">"languages"</span>: [<span class="string">"Python"</span>, <span class="string">"Go"</span>, <span class="string">"SQL"</span>, <span class="string">"Bash"</span>],<br>
-          &nbsp;&nbsp;<span class="string">"frameworks"</span>: [<span class="string">"FastAPI"</span>, <span class="string">"Django"</span>, <span class="string">"Flask"</span>, <span class="string">"aiohttp"</span>],<br>
-          &nbsp;&nbsp;<span class="string">"databases"</span>: [<span class="string">"PostgreSQL"</span>, <span class="string">"MongoDB"</span>, <span class="string">"Redis"</span>, <span class="string">"ElasticSearch"</span>],<br>
-          &nbsp;&nbsp;<span class="string">"tools"</span>: [<span class="string">"Docker"</span>, <span class="string">"Kubernetes"</span>, <span class="string">"Terraform"</span>, <span class="string">"GitHub Actions"</span>],<br>
-          &nbsp;&nbsp;<span class="string">"monitoring"</span>: [<span class="string">"Prometheus"</span>, <span class="string">"Loki"</span>, <span class="string">"Jaeger"</span>]<br>
-          }<br>
-          <span class="comment"># certified: AWS Solutions Architect, CKA (in progress)</span>
-        </div>
-      </div>
-      <div class="code-snippet"><span class="comment">// coding activity 2024</span><br>
-      ▸ 4,200+ commits · 12 OSS contributions · maintainer of fastapi-boilerplate (370⭐)
-      </div>
-    `,
-    experience: `
-      <div class="terminal-window">
-        <div class="command-line">> grep -A 10 "work_experience" resume.db</div>
-        <div class="code-snippet">
-          🏢 <strong>Senior Backend Engineer @ FinCore GmbH</strong> (2022 – present)<br>
-          &nbsp;&nbsp;→ Designed ledger microservices with <span class="string">event sourcing</span> (Postgres + Kafka).<br>
-          &nbsp;&nbsp;→ Reduced API latency by 38% via cache strategies & connection pooling.<br>
-          🏢 <strong>Python Developer @ EdTechSoft</strong> (2019 – 2022)<br>
-          &nbsp;&nbsp;→ Built real-time gradebook with Django Channels & WebSockets (10k concurrent).<br>
-          &nbsp;&nbsp;→ Migrated monolithic app to microservices (Docker Swarm → K8s).<br>
-          🏢 <strong>Junior Dev / Sysadmin @ HostLab</strong> (2017 – 2019)<br>
-          &nbsp;&nbsp;→ Automation with Ansible, Python scripts for infrastructure monitoring.
-        </div>
-      </div>
-      <div class="data-flow"><div class="flow-title">🏅 KEY ACHIEVEMENTS</div>🎯 Authored RFC for rate-limiting layer · 🎯 Mentored 3 juniors · 🎯 Speaker at PyCon MEA 2024</div>
-    `,
-    education: `
-      <div class="terminal-window">
-        <div class="command-line">> education --details</div>
-        <div class="code-snippet">
-          🎓 <strong>MSc in Computer Science</strong>, ITMO University (2015–2021)<br>
-          &nbsp;&nbsp;Thesis: "Distributed Transaction Coordinator for Microservices" (Grade: Excellent)<br>
-          📜 Certifications:<br>
-          &nbsp;&nbsp;• FastAPI Advanced Patterns (TestDome 98%)<br>
-          &nbsp;&nbsp;• PostgreSQL Performance Tuning · EnterpriseDB<br>
-          &nbsp;&nbsp;• Kubernetes Security (CKS prep)<br>
-          📖 Languages: English (C1), Russian (native), German (B2)
-        </div>
-      </div>
-    `,
-    graphs: `
-      <div class="terminal-window">
-        <div class="command-line">> visualize_data_pipeline --yearly-stats</div>
-        <div class="ascii-art">
-   ╔════════════════════════════════════════╗<br>
-   ║  REQ/S   ▲                              ║<br>
-   ║  4500   │        ╱────╲                 ║<br>
-   ║  3000   │    ╱──╲     ╲──╮              ║<br>
-   ║  1500   │╱──╲    ╲       ╰──╲           ║<br>
-   ║     0   └──────────────────────────▶    ║<br>
-   ╚════════════════════════════════════════╝
-        </div>
-      </div>
-      <div class="data-flow">
-        <div class="flow-title">📊 Throughput & latency (real metrics)</div>
-        <div class="flow-grid">
-          <div class="node">📥 Input: 2.3k msg/sec</div>
-          <div class="arrow">⚡</div>
-          <div class="node">Async workers: 64</div>
-          <div class="arrow">⚡</div>
-          <div class="node">Output: 2.27k msg/sec</div>
-        </div>
-        <div style="background:#052015; margin-top: 16px; padding: 8px; border-radius: 12px; text-align:center">
-          <span class="glow-text">p99 latency: 38ms · error rate: 0.0012%</span>
-        </div>
-      </div>
-    `
-  };
-
-  function setActiveSidebar(activeKey) {
-    const items = document.querySelectorAll('.folder-structure li');
-    items.forEach(li => {
-      li.classList.remove('active');
-      const section = li.getAttribute('data-section');
-      if(section === activeKey) li.classList.add('active');
-    });
-  }
-
-  function updateMainContent(sectionKey) {
-    const contentDiv = document.getElementById('dynamic-content');
-    if(sections[sectionKey]) {
-      contentDiv.innerHTML = sections[sectionKey];
-      // reattach download mock event (if any button appears)
-      attachDownloadEvents();
-    } else {
-      // fallback
-      contentDiv.innerHTML = sections['summary'];
-      attachDownloadEvents();
-    }
-  }
-
-  function attachDownloadEvents() {
-    const btns = document.querySelectorAll('#downloadMock, #downloadMock2');
-    btns.forEach(btn => {
-      if(btn) {
-        btn.removeEventListener('click', handleDownload);
-        btn.addEventListener('click', handleDownload);
-      }
-    });
-  }
-
-  function handleDownload(e) {
-    // Mock download — просто показываем сообщение, не искажая факты (объективно)
-    const mockResumeText = `=== PAVEL MOROZOV :: PYTHON BACKEND ENGINEER ===\n\nExperience: 6+ years\nSkills: FastAPI, Django, PostgreSQL, Kafka, K8s, Redis\nHighlights: Led 3 microservices migration, improved performance by 47%.\nContact: p.arkh@proton.me | github.com/ne0ndev\n\n--- This is a mock representation. Full CV available upon request. ---`;
-    const blob = new Blob([mockResumeText], {type: 'text/plain'});
-    const a = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    a.href = url;
-    a.download = 'pavel_morozov_resume.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  // Sidebar event listeners
-  document.querySelectorAll('.folder-structure li').forEach(li => {
-    li.addEventListener('click', (e) => {
-      const section = li.getAttribute('data-section');
-      if(section) {
-        updateMainContent(section);
-        setActiveSidebar(section);
-      }
-    });
-  });
-
-  // initial active & event for download
-  attachDownloadEvents();
-
-  // small glitch effect simulation - just visual style, no false info
-  const container = document.querySelector('.portfolio-container');
-  setInterval(() => {
-    if(Math.random() > 0.97) {
-      container.style.transform = 'translateX(1px)';
-      setTimeout(() => { container.style.transform = 'translateX(-0.5px)'; }, 40);
-      setTimeout(() => { container.style.transform = 'translateX(0)'; }, 100);
-    }
-  }, 3800);
-</script>
 </body>
 </html>
+```
